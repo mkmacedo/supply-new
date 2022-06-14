@@ -1,6 +1,6 @@
 from cmath import nan
 from datetime import date, datetime, timedelta
-from icecream import ic
+#from icecream import ic
 import math
 from operator import index
 #from tracemalloc import start
@@ -445,7 +445,7 @@ class Medicamentos:
             if self.d[key].get('batchAbaProdutos') != None:
                 for batchKey in list(self.d[key]['batchAbaProdutos']):
 
-                    batchList.append(batchKey)
+                    batchList.append(batchKey + ' (Trânsito)')
 
                     stockAmount = self.d[key]['batchAbaProdutos'][batchKey].get('Stock Amount')
                     stockAmountList.append(stockAmount)
@@ -477,6 +477,7 @@ class Medicamentos:
             salesList = [self.d[key].get('Sales')]*lgth
             deliveryList = [self.d[key].get('Delivery')]*lgth
             colocadoList = [self.d[key].get('Colocado')]*lgth
+            destruicaoList = [''] *lgth 
             #blockedList = [0]*lgth
 
             if len(batchList) != len(stockAmountList) and len(batchList) != len(limitSalesDateList):
@@ -498,7 +499,8 @@ class Medicamentos:
                     'Limit Sales Date': limitSalesDateList,
                     'Plant': plantList,
                     'BSK': batchStatusKeyList,
-                    'Blocked': blockedList
+                    'Blocked': blockedList,
+                    'Destruição': destruicaoList 
                     }
 
             if type(df_table) == type(None):
@@ -523,6 +525,7 @@ class Medicamentos:
                 if df_table.at[i, 'Month'] >= -6:
                     #print(df_table.at[i, 'Month'])
                     df_destruction = df_destruction.append(df_table.loc[i], ignore_index=True)
+                    df_table.at[i, 'Destruição'] = 'DESTRUIR'
             except:
                 pass
         df_destruction = df_destruction[destructionTableCols]
